@@ -1,8 +1,14 @@
-import org.apache.ws.security.*;
-import org.apache.ws.security.components.crypto.Crypto;
-import org.apache.ws.security.components.crypto.CryptoFactory;
-import org.apache.ws.security.handler.RequestData;
-import org.apache.ws.security.handler.WSHandlerConstants;
+import org.apache.wss4j.common.crypto.Crypto;
+import org.apache.wss4j.common.crypto.CryptoFactory;
+import org.apache.wss4j.common.ext.WSSecurityException;
+import org.apache.wss4j.dom.WSConstants;
+import org.apache.wss4j.dom.engine.WSSConfig;
+import org.apache.wss4j.dom.engine.WSSecurityEngine;
+import org.apache.wss4j.dom.engine.WSSecurityEngineResult;
+import org.apache.wss4j.dom.handler.HandlerAction;
+import org.apache.wss4j.dom.handler.RequestData;
+import org.apache.wss4j.dom.handler.WSHandlerConstants;
+import org.apache.wss4j.dom.handler.WSHandlerResult;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -24,6 +30,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DigitalSignatureDemo {
@@ -90,12 +97,12 @@ public class DigitalSignatureDemo {
     reqData.setMsgContext(msgContext);
     reqData.setUsername("clientca3");
 
-    final java.util.List actions = new java.util.ArrayList();
-    actions.add(new Integer(WSConstants.SIGN));
+    final List<HandlerAction> actions = new ArrayList();
+    actions.add(new HandlerAction(WSConstants.SIGN));
     CustomHandler handler = new CustomHandler();
 
     // sign document
-    handler.send(WSConstants.SIGN, doc, reqData, actions, true);
+    handler.send(doc, reqData, actions, true);
 
     return doc;
   }
@@ -143,15 +150,16 @@ public class DigitalSignatureDemo {
     SOAPException {
     Crypto crypto = CryptoFactory.getInstance("receiver.properties");
     WSSecurityEngine engine = new WSSecurityEngine();
+    // TODO
     WSSConfig config = WSSConfig.getNewInstance();
-    config.setWsiBSPCompliant(false);
+ //   config.setWsiBSPCompliant(false); // TODO
     engine.setWssConfig(config);
 
     // process verification
-    List<WSSecurityEngineResult> res = engine.processSecurityHeader(signedDoc,
+    WSHandlerResult res = engine.processSecurityHeader(signedDoc,
       null, null, crypto);
 
-    for (WSSecurityEngineResult ers : res) {
+    for (WSSecurityEngineResult ers : res.getResults()) {
       if (ers.get(WSSecurityEngineResult.TAG_BINARY_SECURITY_TOKEN) != null) {
 
         // You can get certificate sent by client here

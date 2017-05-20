@@ -1,7 +1,9 @@
-
-import org.apache.ws.security.WSSecurityEngineResult;
-import org.apache.ws.security.handler.WSHandler;
-import org.apache.ws.security.handler.RequestData;
+import org.apache.wss4j.common.ext.WSSecurityException;
+import org.apache.wss4j.dom.engine.WSSecurityEngineResult;
+import org.apache.wss4j.dom.handler.HandlerAction;
+import org.apache.wss4j.dom.handler.RequestData;
+import org.apache.wss4j.dom.handler.WSHandler;
+import org.apache.wss4j.dom.handler.WSHandlerResult;
 import org.w3c.dom.Document;
 
 import java.util.HashMap;
@@ -57,14 +59,12 @@ public class CustomHandler extends WSHandler {
   }
 
   public void send(
-    int action,
     Document doc,
     RequestData reqData,
-    List<Integer> actions,
+    List<HandlerAction> actions,
     boolean request
-  ) throws org.apache.ws.security.WSSecurityException {
+  ) throws WSSecurityException {
     doSenderAction(
-      action,
       doc,
       reqData,
       actions,
@@ -73,33 +73,33 @@ public class CustomHandler extends WSHandler {
   }
 
   public void receive(
-    int action,
+    List<Integer> actions,
     RequestData reqData
-  ) throws org.apache.ws.security.WSSecurityException {
+  ) throws WSSecurityException {
     doReceiverAction(
-      action,
+      actions,
       reqData
     );
   }
 
   public void signatureConfirmation(
     RequestData requestData,
-    List<WSSecurityEngineResult> results
-  ) throws org.apache.ws.security.WSSecurityException {
-    checkSignatureConfirmation(requestData, results);
+    WSHandlerResult handlerResults
+  ) throws WSSecurityException {
+    checkSignatureConfirmation(requestData, handlerResults);
   }
 
   public boolean checkResults(
     List<WSSecurityEngineResult> results,
     List<Integer> actions
-  ) throws org.apache.ws.security.WSSecurityException {
+  ) throws WSSecurityException {
     return checkReceiverResults(results, actions);
   }
 
   public boolean checkResultsAnyOrder(
     List<WSSecurityEngineResult> results,
     List<Integer> actions
-  ) throws org.apache.ws.security.WSSecurityException {
+  ) throws WSSecurityException {
     return checkReceiverResultsAnyOrder(results, actions);
   }
 
