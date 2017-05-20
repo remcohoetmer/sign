@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+
+    <SOAP-ENV:Body>
+        <SOAP-ENV:Envelope SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+
+            <SOAP-ENV:Body xmlns:m="http://www.xyz.org/quotation">
+
+                <m:GetQuotationResponse>
+                    <m:Quotation>Here is the quotation</m:Quotation>
+                </m:GetQuotationResponse>
+
+            </SOAP-ENV:Body>
+
+        </SOAP-ENV:Envelope>
+    </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
