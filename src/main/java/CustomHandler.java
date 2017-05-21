@@ -10,13 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
-/**
- * A trivial extension of the WSHandler type for use in unit-testing.
- */
 public class CustomHandler extends WSHandler {
 
-  private Map<String, Object> optionsMap = new HashMap<String, Object>();
+  private Map<String, Object> optionsMap = new HashMap<>();
 
   public Object
   getOption(String key) {
@@ -35,25 +31,23 @@ public class CustomHandler extends WSHandler {
     String key,
     Object value
   ) {
-    ((Map<String, Object>)ctx).put(key, value);
+    ((Map<String, Object>) ctx).put(key, value);
   }
 
   public Object
   getProperty(Object ctx, String key) {
-    if (ctx instanceof Map<?,?>) {
-      return ((Map<?,?>)ctx).get(key);
+    if (ctx instanceof Map<?, ?>) {
+      return ((Map<?, ?>) ctx).get(key);
     }
     return null;
   }
 
-  public void
-  setPassword(Object msgContext, String password) {
+  public void setPassword(Object msgContext, String password) {
   }
 
-  public String
-  getPassword(Object msgContext) {
-    if (msgContext instanceof Map<?,?>) {
-      return (String)((Map<?,?>)msgContext).get("password");
+  public String getPassword(Object msgContext) {
+    if (msgContext instanceof Map<?, ?>) {
+      return (String) ((Map<?, ?>) msgContext).get("password");
     }
     return null;
   }
@@ -72,14 +66,8 @@ public class CustomHandler extends WSHandler {
     );
   }
 
-  public void receive(
-    List<Integer> actions,
-    RequestData reqData
-  ) throws WSSecurityException {
-    doReceiverAction(
-      actions,
-      reqData
-    );
+  public void receive(List<Integer> actions, RequestData reqData) throws WSSecurityException {
+    doReceiverAction(actions, reqData);
   }
 
   public void signatureConfirmation(

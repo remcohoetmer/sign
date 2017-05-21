@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
 
-    <SOAP-ENV:Body>
-        <SOAP-ENV:Envelope SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
-
-            <SOAP-ENV:Body xmlns:m="http://www.xyz.org/quotation">
-
-                <m:GetQuotationResponse>
-                    <m:Quotation>Here is the quotation</m:Quotation>
-                </m:GetQuotationResponse>
-
-            </SOAP-ENV:Body>
-
-        </SOAP-ENV:Envelope>
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+                   SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                   xmlns:wsa="http://www.w3.org/2005/08/addressing">
+    <SOAP-ENV:Header>
+        <wsa:To>http://localhost:7801/Service</wsa:To>
+        <wsa:ReplyTo>
+            <wsa:Address>http://www.w3.org/2005/08/addressing/anonymous</wsa:Address>
+        </wsa:ReplyTo>
+        <wsa:FaultTo>
+            <wsa:Address>http://www.w3.org/2005/08/addressing/anonymous</wsa:Address>
+        </wsa:FaultTo>
+        <wsa:MessageID>urn:uuid:020C911C16EB130A8F1204119836321</wsa:MessageID>
+        <wsa:Action>http://ibm.com/Service/Ping</wsa:Action>
+    </SOAP-ENV:Header>
+    <SOAP-ENV:Body xmlns:m="http://www.xyz.org/quotation">
+        <m:GetQuotationResponse>
+            <m:Quotation>Here is the quotation</m:Quotation>
+        </m:GetQuotationResponse>
     </SOAP-ENV:Body>
+
 </SOAP-ENV:Envelope>
