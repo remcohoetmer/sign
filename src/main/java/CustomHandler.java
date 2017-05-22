@@ -1,27 +1,16 @@
 import org.apache.wss4j.common.ext.WSSecurityException;
-import org.apache.wss4j.dom.engine.WSSecurityEngineResult;
 import org.apache.wss4j.dom.handler.HandlerAction;
 import org.apache.wss4j.dom.handler.RequestData;
 import org.apache.wss4j.dom.handler.WSHandler;
-import org.apache.wss4j.dom.handler.WSHandlerResult;
 import org.w3c.dom.Document;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class CustomHandler extends WSHandler {
-
-  private Map<String, Object> optionsMap = new HashMap<>();
-
   public Object
   getOption(String key) {
-    return optionsMap.get(key);
-  }
-
-  public void
-  setOption(String key, Object option) {
-    optionsMap.put(key, option);
+    return null;
   }
 
   @SuppressWarnings("unchecked")
@@ -46,10 +35,7 @@ public class CustomHandler extends WSHandler {
   }
 
   public String getPassword(Object msgContext) {
-    if (msgContext instanceof Map<?, ?>) {
-      return (String) ((Map<?, ?>) msgContext).get("password");
-    }
-    return null;
+    return "";
   }
 
   public void send(
@@ -65,31 +51,4 @@ public class CustomHandler extends WSHandler {
       request
     );
   }
-
-  public void receive(List<Integer> actions, RequestData reqData) throws WSSecurityException {
-    doReceiverAction(actions, reqData);
-  }
-
-  public void signatureConfirmation(
-    RequestData requestData,
-    WSHandlerResult handlerResults
-  ) throws WSSecurityException {
-    checkSignatureConfirmation(requestData, handlerResults);
-  }
-
-  public boolean checkResults(
-    List<WSSecurityEngineResult> results,
-    List<Integer> actions
-  ) throws WSSecurityException {
-    return checkReceiverResults(results, actions);
-  }
-
-  public boolean checkResultsAnyOrder(
-    List<WSSecurityEngineResult> results,
-    List<Integer> actions
-  ) throws WSSecurityException {
-    return checkReceiverResultsAnyOrder(results, actions);
-  }
-
-
 }

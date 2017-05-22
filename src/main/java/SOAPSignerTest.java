@@ -1,5 +1,8 @@
+import org.apache.wss4j.common.ConfigurationConstants;
+import org.apache.wss4j.common.SignatureActionToken;
+import org.apache.wss4j.common.crypto.CertificateStore;
 import org.apache.wss4j.common.crypto.Crypto;
-import org.apache.wss4j.common.crypto.CryptoFactory;
+import org.apache.wss4j.common.crypto.CryptoType;
 import org.apache.wss4j.common.ext.WSSecurityException;
 import org.apache.wss4j.dom.WSConstants;
 import org.apache.wss4j.dom.engine.WSSConfig;
@@ -12,6 +15,7 @@ import org.apache.wss4j.dom.handler.WSHandlerResult;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
+import javax.security.auth.callback.CallbackHandler;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.MimeHeaders;
@@ -23,17 +27,14 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
+import java.security.*;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
+import java.util.regex.Pattern;
 
 public class SOAPSignerTest {
-
-  /**
-   * Load raw texfile containing xml document and wrap it using soap envelope
-   */
 
   private SOAPMessage loadDocument(String filePath) throws SOAPException, IOException {
     try (FileInputStream fis = new FileInputStream(new File(filePath))) {
@@ -43,17 +44,19 @@ public class SOAPSignerTest {
     }
   }
 
-  /**
-   * Sign SOAPMessage
-   */
   public Document signSOAPMessage(SOAPMessage soapEnvelope)
-    throws SOAPException, TransformerException, WSSecurityException {
+    throws SOAPException, TransformerException, WSSecurityException, UnrecoverableKeyException, CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException {
     Document doc = soapEnvelope.getSOAPPart();
 
     final RequestData reqData = new RequestData();
+    KeyStore keysStore = loadKeys("keystore.jks");
+    Crypto crypto = new MemoryCrypto(keysStore);
+    SignatureActionToken token = new SignatureActionToken();
+    token.setCrypto(crypto);
+    reqData.setSignatureToken(token);
+
     Map msgContext = new TreeMap();
     msgContext.put(WSHandlerConstants.ENABLE_SIGNATURE_CONFIRMATION, "true");
-    msgContext.put(WSHandlerConstants.SIG_PROP_FILE, "sender.properties");
 
     // Set this property if you want client public key (X509 certificate) sent along with document
     // server will check signature using this public key
@@ -65,11 +68,12 @@ public class SOAPSignerTest {
         "{}{http://www.w3.org/2005/08/addressing}ReplyTo;" +
         "{}{http://schemas.xmlsoap.org/soap/envelope/}Body;";
 
-    msgContext.put(WSHandlerConstants.SIGNATURE_PARTS, signatureParts);
+    msgContext.put(ConfigurationConstants.SIGNATURE_PARTS, signatureParts);
 
     msgContext.put("password", "changeit");
     reqData.setMsgContext(msgContext);
     reqData.setUsername("clientca3");
+
 
     final List<HandlerAction> actions = new ArrayList();
     actions.add(new HandlerAction(WSConstants.TS));
@@ -84,14 +88,6 @@ public class SOAPSignerTest {
     return doc;
   }
 
-  /**
-   * Save Document to file
-   *
-   * @param doc  Document to be persisted
-   * @param file output file
-   * @throws FileNotFoundException
-   * @throws TransformerException
-   */
   public void persistDocument(Document doc, String file)
     throws IOException, TransformerException {
     Transformer transformer = TransformerFactory.newInstance().newTransformer();
@@ -101,22 +97,65 @@ public class SOAPSignerTest {
     }
   }
 
-  /**
-   * Check signed documents
-   *
-   * @param signedDoc
-   * @throws WSSecurityException
-   * @throws FileNotFoundException
-   * @throws ParserConfigurationException
-   * @throws SAXException
-   * @throws IOException
-   * @throws SOAPException
-   */
+  class MemoryCrypto extends org.apache.wss4j.common.crypto.CryptoBase {
+    KeyStore keyStore;
+    PrivateKey privateKey;
+
+    MemoryCrypto(KeyStore keyStore) {
+      this.keyStore = keyStore;
+      try {
+        privateKey = (PrivateKey) keyStore.getKey("clientca3", "changeit".toCharArray());
+      } catch (KeyStoreException e) {
+        e.printStackTrace();
+      } catch (NoSuchAlgorithmException e) {
+        e.printStackTrace();
+      } catch (UnrecoverableKeyException e) {
+        e.printStackTrace();
+      }
+    }
+
+    @Override
+    public X509Certificate[] getX509Certificates(CryptoType cryptoType) throws WSSecurityException {
+      try {
+        return new X509Certificate[]{(X509Certificate) keyStore.getCertificate("clientca3")};
+      } catch (KeyStoreException e) {
+        throw new RuntimeException(e);
+      }
+    }
+
+    @Override
+    public String getX509Identifier(X509Certificate cert) throws WSSecurityException {
+      throw new IllegalArgumentException();
+    }
+
+    @Override
+    public PrivateKey getPrivateKey(X509Certificate certificate, CallbackHandler callbackHandler) throws WSSecurityException {
+      throw new IllegalArgumentException();
+    }
+
+    @Override
+    public PrivateKey getPrivateKey(String identifier, String password) throws WSSecurityException {
+      return privateKey;
+    }
+
+    @Override
+    public void verifyTrust(X509Certificate[] certs, boolean enableRevocation, Collection<Pattern> subjectCertConstraints) throws WSSecurityException {
+      throw new IllegalArgumentException();
+    }
+
+    @Override
+    public void verifyTrust(PublicKey publicKey) throws WSSecurityException {
+      throw new IllegalArgumentException();
+    }
+  }
+
   public void checkSignedDoc(Document signedDoc)
     throws WSSecurityException, FileNotFoundException,
     ParserConfigurationException, SAXException, IOException,
-    SOAPException {
-    Crypto crypto = CryptoFactory.getInstance("receiver.properties");
+    SOAPException, UnrecoverableKeyException, CertificateException, NoSuchAlgorithmException, KeyStoreException {
+    //
+    KeyStore keysStore = loadKeys("cacerts");
+    Crypto crypto = new CertificateStore(getX509Certificates(keysStore));
     WSSecurityEngine engine = new WSSecurityEngine();
     // TODO
     WSSConfig config = WSSConfig.getNewInstance();
@@ -142,7 +181,33 @@ public class SOAPSignerTest {
     }
   }
 
-  public static void main(String... args) throws ParserConfigurationException, SAXException, IOException, SOAPException, TransformerException, WSSecurityException {
+  private X509Certificate[] getX509Certificates(KeyStore keysStore) throws KeyStoreException {
+    List<X509Certificate> certificates = new ArrayList<>();
+
+    Enumeration<String> aliases = keysStore.aliases();
+    while (aliases.hasMoreElements()) {
+      String alias = aliases.nextElement();
+      Certificate[] chain = keysStore.getCertificateChain(alias);
+      if (chain == null) {
+        Certificate cert = keysStore.getCertificate(alias);
+        if (cert != null) {
+          System.err.println("Only cert for " + alias);
+        } else {
+          System.err.println("No chain for " + alias);
+        }
+      } else {
+        System.err.println("Chain for " + alias);
+        for (Certificate certificate : chain) {
+          if (certificate instanceof X509Certificate) {
+            certificates.add((X509Certificate) certificate);
+          }
+        }
+      }
+    }
+    return certificates.toArray(new X509Certificate[certificates.size()]);
+  }
+
+  public static void main(String... args) throws ParserConfigurationException, SAXException, IOException, SOAPException, TransformerException, WSSecurityException, UnrecoverableKeyException, CertificateException, NoSuchAlgorithmException, KeyStoreException {
     SOAPSignerTest digsigDemo = new SOAPSignerTest();
 
     System.out.println("Creating SOAPMessages from xml file");
@@ -158,6 +223,15 @@ public class SOAPSignerTest {
     digsigDemo.persistDocument(signedDoc, "/home/remco/git/wss4j/src/main/resources/out.xml");
 
     System.out.println("Process finished");
+  }
+
+  KeyStore loadKeys(String keyStoreFilename) throws CertificateException, NoSuchAlgorithmException, IOException, KeyStoreException, UnrecoverableKeyException {
+    KeyStore ks = KeyStore.getInstance("JKS");
+    InputStream readStream = new FileInputStream(keyStoreFilename);
+    ks.load(readStream, "changeit".toCharArray());
+    Key key = ks.getKey("keyAlias", "changeit".toCharArray());
+    readStream.close();
+    return ks;
   }
 }
 
