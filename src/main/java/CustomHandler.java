@@ -8,14 +8,16 @@ import java.util.List;
 import java.util.Map;
 
 public class CustomHandler extends WSHandler {
-  public Object
-  getOption(String key) {
+
+  public CustomHandler() {
+    super();
+  }
+  public Object getOption(String key) {
     return null;
   }
 
   @SuppressWarnings("unchecked")
-  public void
-  setProperty(
+  public void setProperty(
     Object ctx,
     String key,
     Object value

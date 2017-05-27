@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+                   xmlns:wsa="http://www.w3.org/2005/08/addressing"
+                   SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+    <SOAP-ENV:Header>
+        <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+                       xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+                       SOAP-ENV:mustUnderstand="1">
+            <wsse:BinarySecurityToken
+                    EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary"
+                    ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3"
+                    wsu:Id="X509-9c5a9f17-99ef-48cd-ad22-38fb0b29b802">
+                MIIDgzCCAmugAwIBAgIEdlTrmTANBgkqhkiG9w0BAQsFADByMQswCQYDVQQGEwJOTDEVMBMGA1UE&#13;
+                CBMMTm90aCBIb2xsYW5kMRIwEAYDVQQHEwlBbXN0ZXJkYW0xDzANBgNVBAoTBkNlcmlvczEPMA0G&#13;
+                A1UECxMGQ2VyaW9zMRYwFAYDVQQDEw1SZW1jbyBIb2V0bWVyMB4XDTE3MDUyMDE5MTM0MloXDTE4&#13;
+                MDUxNTE5MTM0MlowcjELMAkGA1UEBhMCTkwxFTATBgNVBAgTDE5vdGggSG9sbGFuZDESMBAGA1UE&#13;
+                BxMJQW1zdGVyZGFtMQ8wDQYDVQQKEwZDZXJpb3MxDzANBgNVBAsTBkNlcmlvczEWMBQGA1UEAxMN&#13;
+                UmVtY28gSG9ldG1lcjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAJN/yVlso38zTzoC&#13;
+                bWOTklQZm1kemuARSi8IGYxd9B462UwdTNHSyAGoU2YBVMujSGdsrRN5DXzdIKC90q4Igi7ErSiU&#13;
+                O9jvEi+R5DKr3GWPZhXk6qQgB0NFACJlFYWrTC6issyHxJGKjWpG/HOWntgZhEi38X9haY1YdI7O&#13;
+                zfEPpl9Zj+W6m/g6OwsUMbGNRHWYXcI518CTkcyxQzjZ4C6+FIRrjJPggST12xiO9Q3PcPw0oO4r&#13;
+                Zhd3ZErzGzk1GpKa1Adbol8CziZLZSiOTOIc+WSRyseHJyzLowjqcsPsNct2Il7+A3kF2dmyvZqN&#13;
+                m2EsksxtiXp1v9BR6P4MR7MCAwEAAaMhMB8wHQYDVR0OBBYEFAVlz07Xu0HShJkNMuUoSqwuTsG2&#13;
+                MA0GCSqGSIb3DQEBCwUAA4IBAQB4bazrP9wtD0zD/DpJn2YufaanVF65q8221Zk/TNcqoMR0ZyEI&#13;
+                D38TSpFMtVk6CyRLtpAeqcH7QTdBO+QymGP1Xq5k5Fm24ogg71BNGzx0n+CzrvyCaY3f+sejxq0P&#13;
+                nvZwbV2gZz7aHKvtxEHP4+IxjyctLxYJlE+KNkj1jfInRPNoeA5FZ8K1iBaLgvqeEZqf+OSV6LPJ&#13;
+                Lfth2KVz7STBLuRFbFZ/8zajtWnbLW1pK3HzCR7yBcvGIflDp7LCfYYg7EHsJ1d/DvHudSb/G9/v&#13;
+                CDijmpkdTGeU8JMxdQGcscwg+kQReBIjlkEwS2IXJZD4p+/lMiVauO4I5V+FGT9H
+            </wsse:BinarySecurityToken>
+            <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="SIG-24bcd3b1-b770-4ddb-af98-1c3509f98925">
+                <ds:SignedInfo>
+                    <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
+                        <ec:InclusiveNamespaces xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#"
+                                                PrefixList="SOAP-ENV wsa"/>
+                    </ds:CanonicalizationMethod>
+                    <ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+                    <ds:Reference URI="#TS-2ca8af47-e952-4508-a06c-b5a87b73a24f">
+                        <ds:Transforms>
+                            <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
+                                <ec:InclusiveNamespaces xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#"
+                                                        PrefixList="wsse SOAP-ENV wsa"/>
+                            </ds:Transform>
+                        </ds:Transforms>
+                        <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                        <ds:DigestValue>ZPU6ccy+01UsDFwhDxKJeJBS1mc=</ds:DigestValue>
+                    </ds:Reference>
+                    <ds:Reference URI="#id-6fd99e55-2e31-436b-a20a-c0070181e6bc">
+                        <ds:Transforms>
+                            <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
+                                <ec:InclusiveNamespaces xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#"
+                                                        PrefixList="SOAP-ENV"/>
+                            </ds:Transform>
+                        </ds:Transforms>
+                        <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                        <ds:DigestValue>qtCsG1whUiAhH7DudkBjJL2Pr08=</ds:DigestValue>
+                    </ds:Reference>
+                    <ds:Reference URI="#id-43b9edbb-f4b8-4e99-9b7b-e7cd1567feaf">
+                        <ds:Transforms>
+                            <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
+                                <ec:InclusiveNamespaces xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#"
+                                                        PrefixList="SOAP-ENV"/>
+                            </ds:Transform>
+                        </ds:Transforms>
+                        <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                        <ds:DigestValue>s7512PCyXV/GFsX1dslP0DLNkcs=</ds:DigestValue>
+                    </ds:Reference>
+                    <ds:Reference URI="#id-0c96ca00-28ba-4b5d-b7f4-6de0c24a62d7">
+                        <ds:Transforms>
+                            <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
+                                <ec:InclusiveNamespaces xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#"
+                                                        PrefixList="SOAP-ENV"/>
+                            </ds:Transform>
+                        </ds:Transforms>
+                        <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                        <ds:DigestValue>EvYAdWzqXlXIDp8iVgJMamM6vWM=</ds:DigestValue>
+                    </ds:Reference>
+                </ds:SignedInfo>
+                <ds:SignatureValue>hVZ9+54bptVmUe2f8ums1Mw6dfdphI/LZxc7+eE2PFp5Z1p1VTcKKUeAS2Pp8Jhq9/xUcsHbQ28b
+                    uXaq/DOKXslNC+kT+RZSYihB3ESunH9Gc3sl1scUodNtqln50dIQi9ARa7fVz+erXJyh2uaayXqj
+                    J/m1rg5cgAgpqutYiubguJZYquhZtQXfaqEi0NRWHgl4qliSy+o/CN3Kemxnv97N2unfNSoG99gg
+                    ++KxYSmQjUQQj9towLtl0ke9J4lNEsqlxDE+/YFmtvJ2PrhnLVo0Qk6NR5jhSYj0dG2J5dPQ5rns
+                    Vy4v9zk6WHDcCY70cz49Fu7vDrmoE5/J5ga6GQ==
+                </ds:SignatureValue>
+                <ds:KeyInfo Id="KI-14d058a5-42e8-4fc5-86b9-c425a3550b50">
+                    <wsse:SecurityTokenReference wsu:Id="STR-4b91229c-38fb-4e0b-87ae-f044aff8b7af">
+                        <wsse:Reference URI="#X509-9c5a9f17-99ef-48cd-ad22-38fb0b29b802"
+                                        ValueType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3"/>
+                    </wsse:SecurityTokenReference>
+                </ds:KeyInfo>
+            </ds:Signature>
+            <wsu:Timestamp wsu:Id="TS-2ca8af47-e952-4508-a06c-b5a87b73a24f">
+                <wsu:Created>2017-05-27T06:45:04.799Z</wsu:Created>
+                <wsu:Expires>2017-05-27T06:50:04.799Z</wsu:Expires>
+            </wsu:Timestamp>
+        </wsse:Security>
+        <wsa:To xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+                wsu:Id="id-6fd99e55-2e31-436b-a20a-c0070181e6bc">http://localhost:7801/Service
+        </wsa:To>
+        <wsa:ReplyTo xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+                     wsu:Id="id-0c96ca00-28ba-4b5d-b7f4-6de0c24a62d7">
+            <wsa:Address>http://www.w3.org/2005/08/addressing/anonymous</wsa:Address>
+        </wsa:ReplyTo>
+        <wsa:FaultTo>
+            <wsa:Address>http://www.w3.org/2005/08/addressing/anonymous</wsa:Address>
+        </wsa:FaultTo>
+        <wsa:MessageID>urn:uuid:020C911C16EB130A8F1204119836321</wsa:MessageID>
+        <wsa:Action xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+                    wsu:Id="id-43b9edbb-f4b8-4e99-9b7b-e7cd1567feaf">http://ibm.com/Service/Ping
+        </wsa:Action>
+    </SOAP-ENV:Header>
+    <SOAP-ENV:Body xmlns:m="http://www.xyz.org/quotation"
+                   xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+                   wsu:Id="id-df01b20a-032d-465a-b521-b4e17b581c18">
+        <m:GetQuotationResponse>
+            <m:Quotation>Here is the quotation</m:Quotation>
+        </m:GetQuotationResponse>
+    </SOAP-ENV:Body>
+
+</SOAP-ENV:Envelope>

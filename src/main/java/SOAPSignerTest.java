@@ -69,6 +69,7 @@ public class SOAPSignerTest {
         "{}{http://schemas.xmlsoap.org/soap/envelope/}Body;";
 
     msgContext.put(ConfigurationConstants.SIGNATURE_PARTS, signatureParts);
+    msgContext.put(ConfigurationConstants.SIG_ALGO, "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256");
 
     msgContext.put("password", "changeit");
     reqData.setMsgContext(msgContext);
@@ -154,8 +155,9 @@ public class SOAPSignerTest {
     ParserConfigurationException, SAXException, IOException,
     SOAPException, UnrecoverableKeyException, CertificateException, NoSuchAlgorithmException, KeyStoreException {
     //
-    KeyStore keysStore = loadKeys("cacerts");
-    Crypto crypto = new CertificateStore(getX509Certificates(keysStore));
+//    KeyStore keyStore = loadKeys("cacerts");
+    KeyStore keyStore = loadKeys("keystore.jks");
+    Crypto crypto = new CertificateStore(getX509Certificates(keyStore));
     WSSecurityEngine engine = new WSSecurityEngine();
     // TODO
     WSSConfig config = WSSConfig.getNewInstance();
@@ -165,7 +167,9 @@ public class SOAPSignerTest {
     // process verification
     WSHandlerResult res = engine.processSecurityHeader(signedDoc,
       null, null, crypto);
-
+    if (res == null) {
+      throw new RuntimeException("No signature");
+    }
     for (WSSecurityEngineResult ers : res.getResults()) {
       if (ers.get(WSSecurityEngineResult.TAG_BINARY_SECURITY_TOKEN) != null) {
 
@@ -208,6 +212,8 @@ public class SOAPSignerTest {
   }
 
   public static void main(String... args) throws ParserConfigurationException, SAXException, IOException, SOAPException, TransformerException, WSSecurityException, UnrecoverableKeyException, CertificateException, NoSuchAlgorithmException, KeyStoreException {
+    WSSConfig.setAddJceProviders(false);
+    org.apache.xml.security.Init.init();
     SOAPSignerTest digsigDemo = new SOAPSignerTest();
 
     System.out.println("Creating SOAPMessages from xml file");
@@ -215,12 +221,12 @@ public class SOAPSignerTest {
 
     System.out.println("Sign document");
     Document signedDoc = digsigDemo.signSOAPMessage(msg);
-
+    signedDoc.normalizeDocument();
     System.out.println("Check generated signature");
-    digsigDemo.checkSignedDoc(signedDoc);
+    digsigDemo.checkSignedDoc(msg.getSOAPPart());
 
     System.out.println("Persist signed document to file");
-    digsigDemo.persistDocument(signedDoc, "/home/remco/git/wss4j/src/main/resources/out.xml");
+   digsigDemo.persistDocument(msg.getSOAPPart(), "/home/remco/git/wss4j/src/main/resources/out.xml");
 
     System.out.println("Process finished");
   }
